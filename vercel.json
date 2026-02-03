@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "name": "ai-agents-api",
+  "env": {
+    "OPENAI_API_KEY": "@openai_api_key",
+    "ANTHROPIC_API_KEY": "@anthropic_api_key",
+    "COMPOSIO_API_KEY": "@composio_api_key",
+    "VERCEL_TOKEN": "@vercel_token",
+    "GITHUB_TOKEN": "@github_token"
+  },
+  "buildCommand": "pip install -r requirements.txt",
+  "installCommand": "pip install -r requirements.txt",
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.11",
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "api/index.py"
+    }
+  ]
+}
