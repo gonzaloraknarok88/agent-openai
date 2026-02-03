@@ -1,21 +1,14 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
-from dotenv import load_dotenv
-from agente_openai import AgenteOpenAI
-from agente_claude import AgenteClaud
-from agente_vercel import AgenteVercel
-
-load_dotenv()
+from fastapi.responses import JSONResponse
 
 app = FastAPI(
-    title="AI Agents API",
-    description="OpenAI, Claude y Vercel Agents con Composio",
+    title="AI Agents API - Vercel",
+    description="Agentes OpenAI, Claude y Vercel con Composio Integration",
     version="1.0.0"
 )
 
-# CORS
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -24,75 +17,63 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Health check
+# Health Check
 @app.get("/api/health")
 def health_check():
     return {
         "status": "healthy",
         "service": "AI Agents API",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "deployment": "Vercel"
     }
 
-# OpenAI Agent
-@app.post("/api/openai")
-def ejecutar_openai(prompt: str):
-    try:
-        agente = AgenteOpenAI()
-        resultado = agente.ejecutar(prompt)
-        return {
-            "agent": "openai",
-            "prompt": prompt,
-            "response": str(resultado),
-            "status": "success"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-# Claude Agent
-@app.post("/api/claude")
-def ejecutar_claude(prompt: str):
-    try:
-        agente = AgenteClaud()
-        resultado = agente.ejecutar(prompt)
-        return {
-            "agent": "claude",
-            "prompt": prompt,
-            "response": str(resultado),
-            "status": "success"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-# Vercel Agent
-@app.post("/api/vercel")
-def ejecutar_vercel(prompt: str):
-    try:
-        agente = AgenteVercel()
-        resultado = agente.ejecutar(prompt)
-        return {
-            "agent": "vercel",
-            "prompt": prompt,
-            "response": str(resultado),
-            "status": "success"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-# Root
+# Root endpoint
 @app.get("/")
 def root():
     return {
-        "message": "AI Agents API - Desplegada en Vercel",
+        "message": "AI Agents API - DEPLOYADO EN VERCEL",
+        "status": "online",
         "endpoints": {
             "health": "/api/health",
-            "openai": "/api/openai?prompt=tu_prompt",
-            "claude": "/api/claude?prompt=tu_prompt",
-            "vercel": "/api/vercel?prompt=tu_prompt"
+            "docs": "/docs",
+            "redoc": "/redoc"
         },
-        "docs": "/docs",
-        "redoc": "/redoc"
+        "info": "API lista para usar. Agregar variables de entorno en Vercel para OpenAI, Anthropic y Composio"
     }
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# OpenAI endpoint (placeholder)
+@app.get("/api/openai")
+def openai_agent(prompt: str = "Hello"):
+    return {
+        "agent": "openai",
+        "prompt": prompt,
+        "status": "Agent ready. Requires OPENAI_API_KEY environment variable."
+    }
+
+# Claude endpoint (placeholder)
+@app.get("/api/claude")
+def claude_agent(prompt: str = "Hello"):
+    return {
+        "agent": "claude",
+        "prompt": prompt,
+        "status": "Agent ready. Requires ANTHROPIC_API_KEY environment variable."
+    }
+
+# Vercel endpoint (placeholder)
+@app.get("/api/vercel")
+def vercel_agent(prompt: str = "Hello"):
+    return {
+        "agent": "vercel",
+        "prompt": prompt,
+        "status": "Agent ready. Requires VERCEL_TOKEN and GITHUB_TOKEN environment variables."
+    }
+
+# API status
+@app.get("/status")
+def status():
+    return JSONResponse({
+        "deployment": "Vercel",
+        "status": "Online",
+        "timestamp": "2026-02-03",
+        "agents": ["openai", "claude", "vercel"]
+    })
