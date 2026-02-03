@@ -1,6 +1,6 @@
 # OpenAI Agent - Composio Integration for Claude AI Skills
 
-Tres agentes IA listos para usar: OpenAI, Claude y Vercel/GitHub. Integrados con Composio para acceso a 500+ herramientas.
+Tres agentes IA listos para usar: OpenAI, Claude y Vercel/GitHub. Integrados con Composio para acceso a 500+ herramientas. 
 
 ## Agentes Disponibles
 
